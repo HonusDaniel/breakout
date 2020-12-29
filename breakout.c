@@ -5,8 +5,6 @@
 #include <time.h>
 #include <math.h>
 
-
-
 typedef struct
 {
     //color
@@ -26,16 +24,17 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
     TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf" /*path*/, 128 /*size*/);
         SDL_Color just_white = {240, 240, 240};
 
-    SDL_Rect ball;
-        ball.x = disp_width/2;
-        ball.y = disp_height - 65;
-        ball.w = 11;
-        ball.h = 11;
+
     SDL_Rect paddle;
         paddle.x = disp_width/2-20;
         paddle.y = disp_height - 50;
         paddle.w = 70;
         paddle.h = 12;
+    SDL_Rect ball;
+        ball.x = disp_width/2;
+        ball.y = paddle.y - paddle.h;
+        ball.w = 11;
+        ball.h = 11;
     //the sdl2 brick, separate from custom brick_type
     SDL_Rect brick;
         brick.w = disp_width/14;
@@ -55,13 +54,18 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
     SDL_Rect gametype;
         gametype.w = 32;
         gametype.h = 32;
-        gametype.x = disp_width-disp_width/3;
+        gametype.x = disp_width-disp_width/5;
         gametype.y = top_bar.h/2 - score.h /2;
     SDL_Rect lives_rect;
         lives_rect.w = 32;
         lives_rect.h = 32;
-        lives_rect.x = disp_width-disp_width/5;
+        lives_rect.x = disp_width-disp_width/3;
         lives_rect.y = top_bar.h/2 - score.h /2;
+    SDL_Rect centered_message;
+        centered_message.w = 250;
+        centered_message.h = 35;
+        centered_message.x = (disp_width/2) - centered_message.w/2;
+        centered_message.y = (disp_height/2)+centered_message.h;
 
     //initilize the array of bricks / level
     brick_type bricks[14][14];
@@ -99,7 +103,7 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
 
     //bunch of variables
     float dirY = -3;
-    int lives = 9;
+    int lives = 3;
     char lives_char[2] ;
     int mousex = 0;
     float speed_multiplier = 0.6;
@@ -109,6 +113,8 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
     bool already = true;
     int score_int = 0;
     char score_char[10];
+    char message_char[32] = "press <space> to start";
+    char gameover_message[32] = "game over";
 
 
     //main game loop
@@ -119,10 +125,10 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
         if (score_int < 100){
         if (score_int < 10){
             sprintf(score_char, "00%d",score_int);
-        } else
-        sprintf(score_char, "0%d",score_int);
-        }
-        else sprintf(score_char, "%d", score_int);
+            } else
+            sprintf(score_char, "0%d",score_int);
+                }
+                else sprintf(score_char, "%d", score_int);
 
         //mouse to paddle/ball position
         SDL_GetMouseState(&mousex,NULL);
@@ -173,20 +179,30 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
 
 
 
-
+    SDL_Surface* message;
+    if (lives == 0)
+        message = TTF_RenderText_Blended(font, gameover_message, just_white);
+    else
+        message = TTF_RenderText_Blended(font, message_char, just_white);
 
     SDL_Surface* start_game = TTF_RenderText_Blended(font, score_char, just_white);
     SDL_Surface* game_type = TTF_RenderText_Blended(font, "1", just_white);
-        SDL_Surface* live = TTF_RenderText_Blended(font, lives_char, just_white);
+    SDL_Surface* live = TTF_RenderText_Blended(font, lives_char, just_white);
+
+
     SDL_Texture* ONE = SDL_CreateTextureFromSurface(renderer, start_game);
     SDL_Texture* TWO = SDL_CreateTextureFromSurface(renderer, game_type);
     SDL_Texture* THREE = SDL_CreateTextureFromSurface(renderer, live);
+    SDL_Texture* FOUR = SDL_CreateTextureFromSurface(renderer, message);
+
+
     SDL_RenderCopy(renderer, ONE, NULL, &score);
     SDL_RenderCopy(renderer, TWO, NULL, &gametype);
     SDL_RenderCopy(renderer, THREE, NULL, &lives_rect);
+    if ((!playing && score_int == 0) || lives == 0)
+    SDL_RenderCopy(renderer, FOUR, NULL, &centered_message);
 
-
-        SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
 
 
 
@@ -321,7 +337,7 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
         SDL_RenderFillRect(renderer, &paddle);
 
         SDL_SetRenderDrawColor(renderer, 20,140, 120, 255);
-        //SDL_RenderFillRect(renderer, &ball);
+
         SDL_RenderFillRect(renderer, &ball);
 
         //handle collision with walls and losing ball
@@ -350,7 +366,7 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                 lives--;
                 dirY = dirY * -1;
                 ball.x = disp_width/2;
-                ball.y = disp_height - 70;
+                ball.y = paddle.y - paddle.h;
             }
         //lives ran out
         if (lives == 0){
@@ -365,12 +381,14 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
         }
 
         SDL_RenderPresent(renderer);  // Prezentace kreslítka
-            SDL_FreeSurface(start_game);
+        SDL_FreeSurface(start_game);
     SDL_FreeSurface(game_type);
     SDL_FreeSurface(live);
+    SDL_FreeSurface(message);
     SDL_DestroyTexture(ONE);
     SDL_DestroyTexture(TWO);
     SDL_DestroyTexture(THREE);
+    SDL_DestroyTexture(FOUR);
 
     }
         TTF_CloseFont(font);
