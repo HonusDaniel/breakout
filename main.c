@@ -45,5 +45,6 @@ SDL_SetWindowResizable(window,true);
     TTF_Quit();
     SDL_Quit();
 
+
     return 0;
 }

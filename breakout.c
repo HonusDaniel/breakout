@@ -22,50 +22,51 @@ typedef struct
 void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Window** window,FILE* level)
 {
     TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf" /*path*/, 128 /*size*/);
-        SDL_Color just_white = {240, 240, 240};
+    SDL_Color just_white = {240, 240, 240};
 
+    int whatnot = 144;
 
     SDL_Rect paddle;
-        paddle.x = disp_width/2-20;
-        paddle.y = disp_height - 50;
-        paddle.w = 70;
-        paddle.h = 12;
+    paddle.x = disp_width/2-20;
+    paddle.y = disp_height - 50;
+    paddle.w = 70;
+    paddle.h = 12;
     SDL_Rect ball;
-        ball.x = disp_width/2;
-        ball.y = paddle.y - paddle.h;
-        ball.w = 11;
-        ball.h = 11;
+    ball.x = disp_width/2;
+    ball.y = paddle.y - paddle.h;
+    ball.w = 11;
+    ball.h = 11;
     //the sdl2 brick, separate from custom brick_type
     SDL_Rect brick;
-        brick.w = disp_width/14;
-        brick.h = brick.w / 2;
-        brick.x = brick.w;
-        brick.y = 30;
+    brick.w = disp_width/14;
+    brick.h = brick.w / 2;
+    brick.x = brick.w;
+    brick.y = 30;
     SDL_Rect top_bar;
-        top_bar.w = disp_width;
-        top_bar.h = 65;
-        top_bar.x = 0;
-        top_bar.y = 0;
+    top_bar.w = disp_width;
+    top_bar.h = 65;
+    top_bar.x = 0;
+    top_bar.y = 0;
     SDL_Rect score;
-        score.w = disp_width/4;
-        score.h = 32;
-        score.x = 10;
-        score.y = top_bar.h/2 - score.h /2;
+    score.w = disp_width/4;
+    score.h = 32;
+    score.x = 10;
+    score.y = top_bar.h/2 - score.h /2;
     SDL_Rect gametype;
-        gametype.w = 32;
-        gametype.h = 32;
-        gametype.x = disp_width-disp_width/5;
-        gametype.y = top_bar.h/2 - score.h /2;
+    gametype.w = 32;
+    gametype.h = 32;
+    gametype.x = disp_width-disp_width/5;
+    gametype.y = top_bar.h/2 - score.h /2;
     SDL_Rect lives_rect;
-        lives_rect.w = 32;
-        lives_rect.h = 32;
-        lives_rect.x = disp_width-disp_width/3;
-        lives_rect.y = top_bar.h/2 - score.h /2;
+    lives_rect.w = 32;
+    lives_rect.h = 32;
+    lives_rect.x = disp_width-disp_width/3;
+    lives_rect.y = top_bar.h/2 - score.h /2;
     SDL_Rect centered_message;
-        centered_message.w = 250;
-        centered_message.h = 35;
-        centered_message.x = (disp_width/2) - centered_message.w/2;
-        centered_message.y = (disp_height/2)+centered_message.h;
+    centered_message.w = 250;
+    centered_message.h = 35;
+    centered_message.x = (disp_width/2) - centered_message.w/2;
+    centered_message.y = (disp_height/2)+centered_message.h;
 
     //initilize the array of bricks / level
     brick_type bricks[14][14];
@@ -88,7 +89,6 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
 
     }
 
-
     //random direction of ball from the paddle
     srand(time(NULL));
     float dirX;
@@ -97,7 +97,6 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
         dirX = (rand() % 4) - (rand() % 3);
     }
     while (dirX == 0);
-
 
     SDL_Event e;
 
@@ -115,20 +114,24 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
     char score_char[10];
     char message_char[32] = "press <space> to start";
     char gameover_message[32] = "game over";
+    char game_cleared[32] = "all bricks cleared";
 
 
     //main game loop
     while (!quit)
     {
-         sprintf(lives_char, "%d", lives);
+        sprintf(lives_char, "%d", lives);
         //score!
-        if (score_int < 100){
-        if (score_int < 10){
-            sprintf(score_char, "00%d",score_int);
-            } else
-            sprintf(score_char, "0%d",score_int);
-                }
-                else sprintf(score_char, "%d", score_int);
+        if (score_int < 100)
+        {
+            if (score_int < 10)
+            {
+                sprintf(score_char, "00%d",score_int);
+            }
+            else
+                sprintf(score_char, "0%d",score_int);
+        }
+        else sprintf(score_char, "%d", score_int);
 
         //mouse to paddle/ball position
         SDL_GetMouseState(&mousex,NULL);
@@ -177,36 +180,35 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
         SDL_SetRenderDrawColor(renderer, 40,40, 40, 255);
         SDL_RenderFillRect(renderer, &top_bar);
 
+        SDL_Surface* message;
+
+        if (lives == 0)
+            message = TTF_RenderText_Blended(font, gameover_message, just_white);
+        else if (whatnot == 0)
+            message = TTF_RenderText_Blended(font, game_cleared, just_white);
+        else
+            message = TTF_RenderText_Blended(font, message_char, just_white);
 
 
-    SDL_Surface* message;
-    if (lives == 0)
-        message = TTF_RenderText_Blended(font, gameover_message, just_white);
-    else
-        message = TTF_RenderText_Blended(font, message_char, just_white);
+        SDL_Surface* start_game = TTF_RenderText_Blended(font, score_char, just_white);
+        SDL_Surface* game_type = TTF_RenderText_Blended(font, "1", just_white);
+        SDL_Surface* live = TTF_RenderText_Blended(font, lives_char, just_white);
 
-    SDL_Surface* start_game = TTF_RenderText_Blended(font, score_char, just_white);
-    SDL_Surface* game_type = TTF_RenderText_Blended(font, "1", just_white);
-    SDL_Surface* live = TTF_RenderText_Blended(font, lives_char, just_white);
+        SDL_Texture* ONE = SDL_CreateTextureFromSurface(renderer, start_game);
+        SDL_Texture* TWO = SDL_CreateTextureFromSurface(renderer, game_type);
+        SDL_Texture* THREE = SDL_CreateTextureFromSurface(renderer, live);
+        SDL_Texture* FOUR = SDL_CreateTextureFromSurface(renderer, message);
 
+        SDL_RenderCopy(renderer, ONE, NULL, &score);
+        SDL_RenderCopy(renderer, TWO, NULL, &gametype);
+        SDL_RenderCopy(renderer, THREE, NULL, &lives_rect);
+        if ((!playing && score_int == 0) || lives == 0 || whatnot ==0)
+            SDL_RenderCopy(renderer, FOUR, NULL, &centered_message);
 
-    SDL_Texture* ONE = SDL_CreateTextureFromSurface(renderer, start_game);
-    SDL_Texture* TWO = SDL_CreateTextureFromSurface(renderer, game_type);
-    SDL_Texture* THREE = SDL_CreateTextureFromSurface(renderer, live);
-    SDL_Texture* FOUR = SDL_CreateTextureFromSurface(renderer, message);
-
-
-    SDL_RenderCopy(renderer, ONE, NULL, &score);
-    SDL_RenderCopy(renderer, TWO, NULL, &gametype);
-    SDL_RenderCopy(renderer, THREE, NULL, &lives_rect);
-    if ((!playing && score_int == 0) || lives == 0)
-    SDL_RenderCopy(renderer, FOUR, NULL, &centered_message);
-
-    SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
 
 
-
-
+        whatnot = 0;
 
         for (int i = 0; i <= 13; i++)
         {
@@ -215,6 +217,9 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
 
             for (int j = 0; j <=13; j++)
             {
+                if(!bricks[i][j].broken)
+                    whatnot++;
+
                 brick.y = (j * brick.h) + 80;
                 //ball within range of brick on y
                 if (ball.y > brick.y && (ball.y+ball.h < brick.y+brick.h))
@@ -250,6 +255,7 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                         maxX = ball.x+ball.w;
                         //ball on the bottom
                     }
+
                     else
                     {
                         minX = ball.x;
@@ -260,12 +266,12 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                 workX = maxX - minX;
                 workY = maxY - minY;
 
+                //collision check
                 if (!bricks[i][j].broken && already)
                     if ((ball.x > brick.x && ball.x < brick.x + brick.w) || (ball.x + ball.w > brick.x && ball.x+ball.w < brick.x+brick.w))
                         if (ball.y > brick.y && ball.y < brick.y + brick.h || (ball.y + ball.h > brick.y && ball.y+ball.h < brick.y + brick.h))
                         {
-                            //check if there is a collision
-                            // if(ball.x <= brick.x+brick.w && ball.x+ball.w >= brick.x && ball.y <= brick.y + brick.h && ball.y+ball.h>=brick.y && !bricks[i][j].broken){
+
 
                             //which side has been hit? .. not actually used yet
                             already = false;
@@ -278,6 +284,8 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                                 score_int+=4;
                             if ((bricks[i][j].R == 50 && bricks[i][j].G == 200) || (bricks[i][j].R == 50 && bricks[i][j].G == 70) )
                                 score_int+=1;
+
+                            //set new direction after collision
                             if (workY <= workX)
                             {
                                 if(ball.x + ball.h/2 > brick.x + brick.h/2 && ball.y > brick.y+brick.h/2)
@@ -308,36 +316,42 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                                     dirX = dirX * -1;
                                     printf("four;");
                                 }
-                                else {dirY=dirY*-1; ball.x +=workX+0.0001;}
+                                else if (ball.y+ball.h/2 > brick.y)
+                                {
+                                    dirX=dirX*-1;
+                                    ball.y -=(workY+0.0001);
+                                }
+                                else
+                                {
+                                    dirY=dirY*-1;
+                                    ball.x +=workX+0.0001;
+                                }
                             }
 
                             bricks[i][j].broken = true;
-                            //add score on color
-
-
                         }
 
+                //draw bricks, if broken draw empty spot
                 if (!bricks[i][j].broken)
                 {
                     SDL_SetRenderDrawColor(renderer, bricks[i][j].R, bricks[i][j].G, bricks[i][j].B, 255);
                     SDL_RenderFillRect(renderer, &brick);
                     SDL_SetRenderDrawColor(renderer, 20, 0, 20, 180);
                     SDL_RenderDrawRect(renderer, &brick);
-
-                } else {
-                            SDL_SetRenderDrawColor(renderer, 20, 20, 20, 180);
-                    SDL_RenderFillRect(renderer, &brick);
-       SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
                 }
-
+                else
+                {
+                    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 180);
+                    SDL_RenderFillRect(renderer, &brick);
+                    SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+                }
             }
         }
 
+        //draw ball and paddle
         SDL_SetRenderDrawColor(renderer,194, 194, 194,255);
         SDL_RenderFillRect(renderer, &paddle);
-
         SDL_SetRenderDrawColor(renderer, 20,140, 120, 255);
-
         SDL_RenderFillRect(renderer, &ball);
 
         //handle collision with walls and losing ball
@@ -347,19 +361,18 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
             if (dirY < 0)
                 dirY = dirY * -1;
 
-
         if (ball.y >= disp_height - ball.h - 49 && !failed)
             if (ball.x >= (paddle.x-ball.w) && ball.x <= (paddle.x + paddle.w) && !failed)
             {
-
-                //paddle collion new direction on x and yí
-                dirX =  1 - 3 * (paddle.x+(paddle.w / 2) - ball.x) / (paddle.w / 2);
+                //paddle collion new direction on x and y
+                dirX =  1 - 3 * (paddle.x+(paddle.w / 2) - ball.x) / (paddle.w / 2)+0.1;
                 dirY = dirY * -1;
+
 
             }
 
-        //if ball falls through
-            else
+            //if ball falls through
+            else if (whatnot != 0)
             {
                 speed_multiplier = 0.6;
                 playing = false;
@@ -368,29 +381,34 @@ void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Windo
                 ball.x = disp_width/2;
                 ball.y = paddle.y - paddle.h;
             }
-        //lives ran out
-        if (lives == 0){
+            else dirY = dirY*-1;
+
+        //if lives run out
+        if (lives == 0)
+        {
             playing=false;
         }
 
+        //move ball
         if (playing == true)
         {
-            ball.x += dirX *2 * speed_multiplier;
-            ball.y += dirY *2 * speed_multiplier;
+            //weird number for accuracy
+            ball.x += dirX *2*1.048592343 * speed_multiplier;
+            ball.y += dirY *2*1.048592343 * speed_multiplier;
             already = true;
         }
 
-        SDL_RenderPresent(renderer);  // Prezentace kreslítka
+        SDL_RenderPresent(renderer);
         SDL_FreeSurface(start_game);
-    SDL_FreeSurface(game_type);
-    SDL_FreeSurface(live);
-    SDL_FreeSurface(message);
-    SDL_DestroyTexture(ONE);
-    SDL_DestroyTexture(TWO);
-    SDL_DestroyTexture(THREE);
-    SDL_DestroyTexture(FOUR);
-
+        SDL_FreeSurface(game_type);
+        SDL_FreeSurface(live);
+        SDL_FreeSurface(message);
+        SDL_DestroyTexture(ONE);
+        SDL_DestroyTexture(TWO);
+        SDL_DestroyTexture(THREE);
+        SDL_DestroyTexture(FOUR);
     }
-        TTF_CloseFont(font);
+
+    TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
 }
