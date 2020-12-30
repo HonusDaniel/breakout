@@ -1,10 +1,10 @@
 # breakout
 Just another breakout clone made with sdl in c, makefile to come
 
-### font
+# font
 https://github.com/TheRobotFactory/EightBit-Atari-Fonts
 
-### dependencies
+# dependencies
 SDL2, SDL2_ttf, gcc
 
 # ABOUT THE GAME
