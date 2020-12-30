@@ -19,9 +19,13 @@ SDL2, SDL2_ttf, gcc
 
 ### SCORE 
   I went with the following score approach; for every two rows of bricks there is a different score attached depending on far from the paddle they are:
+  
     * RED and DARK ORANGE = 7 points
+    
     * ORANGE and YELLOW = 4 points
+    
     * GREEN and BLUE = 1 point
+    
   Breaking all bricks while also not running out of balls is the goal of the
 game.
 
