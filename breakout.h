@@ -9,6 +9,6 @@
 #include "SDL2/SDL_ttf.h"
 
 
-void breakout(SDL_Renderer** renderer, int disp_width, int disp_height,SDL_Window** window,FILE* level);
+void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Window** window,FILE** level);
 
 #endif

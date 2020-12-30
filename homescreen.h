@@ -3,8 +3,6 @@
 #include <SDL2/SDL.h>
 #include<SDL2/SDL_ttf.h>
 
-
-void home_screen(SDL_Renderer* renderer, int disp_width, int disp_height,SDL_Window** window);
-void settings(SDL_Renderer* renderer, int disp_width, int disp_height,SDL_Window** window);
+void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height);
 
 #endif
