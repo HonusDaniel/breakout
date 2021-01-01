@@ -39,7 +39,6 @@ int main()
     SDL_SetWindowResizable(window,true);
 
     FILE* level;
-    FILE* scores;
 
     home_screen(&renderer, &disp_width, &disp_height, &quit_or_not, &progressive);
 
