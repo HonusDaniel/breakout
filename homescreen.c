@@ -3,6 +3,18 @@
 #include<SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
+void top_scores(FILE** scores){
+
+ //3 top scores
+ if (*scores == NULL) {
+        printf("first run of game");
+
+    } else {
+        printf("score file loaded");
+;    }
+
+fclose(*scores);
+}
 
 void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height)
 {
@@ -25,10 +37,27 @@ void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height)
         keybinding_rect.y = *disp_height - 40;;
         keybinding_rect.w = 250;
         keybinding_rect.h = 30;
+     SDL_Rect score_leaderboard;
+        score_leaderboard.x = 20;
+        score_leaderboard.y = 20;
+        score_leaderboard.w = 250;
+        score_leaderboard.h = 70;
+
+    SDL_Color just_white = {240, 240, 240};
+    TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf" /*path*/, 128 /*size*/);
+    SDL_Surface* leaderboard = TTF_RenderText_Blended(font, "213 233 322", just_white);
+    leaderboard = TTF_RenderText_Blended(font, "213 233 322", just_white);
+    SDL_Texture* leaderboard_texture = SDL_CreateTextureFromSurface(*renderer, leaderboard);
+
+
+    FILE* scores;
+    scores = fopen("scores" , "r+");
+
+    top_scores(&scores);
 
     int whiteBUT = 255;
     int grayBUT = 150;
-    SDL_Color just_white = {240, 240, 240};
+
 
     while (!quit)
     {
@@ -72,7 +101,7 @@ void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height)
         SDL_RenderClear(*renderer);
         SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 255);
 
-TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf" /*path*/, 128 /*size*/);
+
 
 SDL_Surface* keybindings = TTF_RenderText_Blended(font, "press <space> to select", just_white);
 SDL_Surface* start_game = TTF_RenderText_Blended(font, "start game", c);
@@ -84,19 +113,24 @@ SDL_Surface* settings_menu = TTF_RenderText_Blended(font, "settings", c2);
     SDL_RenderCopy(*renderer, ONE, NULL, &rect);
     SDL_RenderCopy(*renderer, TWO, NULL, &rect2);
     SDL_RenderCopy(*renderer, THREE, NULL, &keybinding_rect);
+    SDL_RenderCopy(*renderer, leaderboard_texture, NULL, &score_leaderboard);
+
     SDL_FreeSurface(start_game);
     SDL_FreeSurface(settings_menu);
     SDL_FreeSurface(keybindings);
     SDL_DestroyTexture(ONE);
     SDL_DestroyTexture(TWO);
     SDL_DestroyTexture(THREE);
-    TTF_CloseFont(font);
+
         pos++;
 
         SDL_RenderPresent(*renderer);  // Prezentace kreslítka
     }
 
+    SDL_FreeSurface(leaderboard);
+    SDL_DestroyTexture(leaderboard_texture);
 
+    TTF_CloseFont(font);
 
     SDL_RenderClear(*renderer);
 

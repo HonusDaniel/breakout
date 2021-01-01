@@ -8,6 +8,9 @@
 void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Window** window,FILE** level);
 void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height);
 
+
+
+
 int main()
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -18,7 +21,7 @@ int main()
     SDL_GetCurrentDisplayMode(0, &dm);
     int screenw = dm.w;
     int screenh = dm.h;
-    // Vytvoření okna
+
     SDL_Window* window = SDL_CreateWindow(
         "Breakout",
         screenw/2 + disp_width,
@@ -27,7 +30,7 @@ int main()
         disp_height,
         SDL_WINDOW_SHOWN
     );
-    // Vytvoření kreslítka
+
     SDL_Renderer* renderer = SDL_CreateRenderer(
         window,
         -1,
@@ -40,9 +43,7 @@ SDL_SetWindowResizable(window,true);
 
     home_screen(&renderer, &disp_width, &disp_height);
 
-    //settings(renderer, disp_width, disp_height,window);
     breakout(&renderer, &disp_width, &disp_height, &window, &level);
-      // Uvolnění prostředků
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     fclose(level);

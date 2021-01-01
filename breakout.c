@@ -8,19 +8,17 @@
 /*
 
     EXTRA FILE WITH TOP SCORE
-    FIX THE BOUNCING ALGORITHM
     ADD THE ONE MODE or whatever...
 
 */
 
-typedef struct
-{
-    //color
+typedef struct{
+//color
     unsigned int R;
     unsigned int G;
     unsigned int B;
     bool broken;
-    //dimensions and position
+//dimensions and position
     float w;
     float h;
     float x;
@@ -29,7 +27,7 @@ typedef struct
 
 void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Window** window,FILE** level)
 {
-    TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf" /*path*/, 128 /*size*/);
+    TTF_Font* font = TTF_OpenFont("EightBit Atari-Block.ttf", 128);
     SDL_Color just_white = {240, 240, 240};
 
     int whatnot = 144;
@@ -46,10 +44,10 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     ball.h = 11;
     //the sdl2 brick, separate from custom brick_type
     SDL_Rect brick;
-    brick.w = *disp_width/14;
-    brick.h = brick.w / 2;
-    brick.x = brick.w;
-    brick.y = 30;
+        brick.w = *disp_width/14;
+        brick.h = brick.w / 2;
+        brick.x = brick.w;
+        brick.y = 30;
     SDL_Rect top_bar;
     top_bar.w = *disp_width;
     top_bar.h = 65;
@@ -123,6 +121,8 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     char message_char[32] = "press <space> to start";
     char gameover_message[32] = "game over";
     char game_cleared[32] = "all bricks cleared";
+
+    char tempo[32];
 
 
     //main game loop
@@ -215,6 +215,8 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
 
         SDL_SetRenderDrawColor(*renderer, 180, 0, 0, 255);
 
+        if (whatnot == 0)
+            paddle.w=0;
 
         whatnot = 0;
 
@@ -276,10 +278,10 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
 
                 //collision check
                 if (!bricks[i][j].broken && already)
-                    if (((ball.x > brick.x) && (ball.x < brick.x + brick.w)) || ((ball.x + ball.w > brick.x) && (ball.x+ball.w < brick.x+brick.w)))
+                    if (((ball.x >= brick.x) && (ball.x <= brick.x + brick.w)) || ((ball.x + ball.w >= brick.x) && (ball.x+ball.w <= brick.x+brick.w)))
                         if ((ball.y > brick.y) && (ball.y < brick.y + brick.h) || ((ball.y + ball.h > brick.y) && ((ball.y+ball.h) < brick.y + brick.h)))
                         {
-
+                            speed_multiplier+=0.004;
                             already = false;
                             printf("workX%f workY%f", workX, workY);
 
@@ -299,12 +301,12 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
                                     //bottom
                                     ball.y +=workY+0.0001;
                                     dirY = dirY * -1;
-                                    printf("one;");
+                                    sprintf(tempo, "%s","bottom");
                                 }
                                 else
                                 {
-                                    ball.y-=(workY+0.0001);
-                                    printf("two;");
+                                    ball.y+=(workY);
+                                    sprintf(tempo, "%s","top1");
                                     dirY = dirY * -1;
                                 }
                             }
@@ -314,23 +316,25 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
                                 {
                                     ball.x = brick.x-ball.w-0.001  ;
                                     dirX = dirX * -1;
-                                    printf("threee;");
+                                    sprintf(tempo, "%s","left");
                                 }
                                 else if (ball.x+ball.w/2 > brick.x && ball.x+ball.w/2 < brick.x )
                                 {
                                     ball.x = brick.x+brick.w+0.001;
                                     dirX = dirX * -1;
-                                    printf("four;");
+                                    sprintf(tempo, "%s","four");
                                 }
                                 else if (ball.y+ball.h/2 > brick.y)
                                 {
                                     dirX=dirX*-1;
-                                    ball.y -=(workY+0.0001);
+                                    ball.x +=(workX+0.0001);
+                                    sprintf(tempo, "%s","right");
                                 }
                                 else
                                 {
                                     dirY=dirY*-1;
-                                    ball.x +=workX+0.0001;
+                                    ball.y -=workY;
+                                    sprintf(tempo, "%s","top");
                                 }
                             }
 
@@ -355,8 +359,10 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
         }
 
         //draw ball and paddle
+
         SDL_SetRenderDrawColor(*renderer,194, 194, 194,255);
         SDL_RenderFillRect(*renderer, &paddle);
+
         SDL_SetRenderDrawColor(*renderer, 20,140, 120, 255);
         SDL_RenderFillRect(*renderer, &ball);
 
