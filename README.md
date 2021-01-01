@@ -13,8 +13,9 @@ SDL2, SDL2_ttf, gcc
  * pressing ESC quits the game
  * two game modes. 
  
- 	BREAKOUT - normal breakout without the ball speeding up and a larger paddle
- 	SPEEDUP - the ball moves faster the longer the player plays the game. The paddle is also smaller to increase difficulty. Hitting  a red brick increases the speed also.
+ 	*BREAKOUT* - normal breakout without the ball speeding up and a larger paddle
+  
+ 	*SPEEDUP* - the ball moves faster the longer the player plays the game. The paddle is also smaller to increase difficulty. Hitting  a red brick increases the speed also.
 
 ### HOW TO PLAY
  * use mouse to move the paddle around
