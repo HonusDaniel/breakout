@@ -1,9 +1,11 @@
 # breakout
-Just another breakout clone made with sdl in c, makefile to come
+Just another breakout clone made with sdl in c
 
 ### font
 https://github.com/TheRobotFactory/EightBit-Atari-Fonts
 
+### installation
+run `make` in the terminal
 ### dependencies
 SDL2, SDL2_ttf, gcc
 
