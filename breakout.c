@@ -32,13 +32,13 @@ void save_score(int* score_int)
 //open file in read mode to get values and not delete it accidentally
     FILE* score;
     score = fopen("top_scores","a+");
-        fscanf(score, "%s ", &stri0[16]);
+        fscanf(score, "%s ", &stri0);
         strcpy(scores_array[0], stri0);
         sscanf(stri0, "%d", &int0);
-        fscanf(score, "%s ", &stri1[16]);
+        fscanf(score, "%s ", &stri1);
         strcpy(scores_array[1], stri1);
         sscanf(stri1, "%d", &int1);
-        fscanf(score, "%s", &stri2[16]);
+        fscanf(score, "%s", &stri2);
         strcpy(scores_array[2], stri2);
         sscanf(stri2, "%d", &int2);
     fclose(score);
@@ -210,7 +210,7 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     int lives = 3;
     char lives_char[2] ;
     int mousex = 0;
-    float speed_multiplier = 0.62;
+    float speed_multiplier = 0.1;
     float minX,minY,maxY,maxX,workX,workY;
     bool quit,failed,playing = false;
     bool already = true;

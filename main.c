@@ -40,6 +40,7 @@ int main()
 
     FILE* level;
 
+
     home_screen(&renderer, &disp_width, &disp_height, &quit_or_not, &progressive);
 
     //don't attempt to open file and run when quit in home_screen function
