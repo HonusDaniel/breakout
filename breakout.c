@@ -210,8 +210,8 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     int lives = 3;
     char lives_char[2] ;
     int mousex = 0;
-    float speed_multiplier = 0.1;
-    float minX,minY,maxY,maxX,workX,workY;
+    float speed_multiplier = 0.62;
+    float minX,minY,maxY,maxX,workX,workY,rounded;
     bool quit,failed,playing = false;
     bool already = true;
     int score_int = 0;
@@ -504,9 +504,10 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     //move ball
         if (playing == true)
         {
-        //weird number for accuracy of collision check :)
-            ball.x += dirX *2*1.048592343 * speed_multiplier;
-            ball.y += dirY *2*1.048592343 * speed_multiplier;
+            rounded = floorf((dirX *2*1.048592343 * speed_multiplier) * 100) / 100;
+            ball.x += rounded;
+            rounded = floorf((dirY *2*1.048592343 * speed_multiplier) * 100) / 100;
+            ball.y += rounded;
             already = true;
         }
 
