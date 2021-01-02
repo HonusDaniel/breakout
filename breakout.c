@@ -210,7 +210,11 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     int lives = 3;
     char lives_char[2] ;
     int mousex = 0;
-    float speed_multiplier = 0.62;
+    float speed_multiplier;
+    if (progressive){
+        speed_multiplier = 0.62;
+    }
+    else speed_multiplier = 0.75;
     float minX,minY,maxY,maxX,workX,workY,rounded;
     bool quit,playing = false;
     bool already = true;
@@ -487,7 +491,10 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
             else if (whatnot != 0)
             {
                 lives--;
-                speed_multiplier = 0.62;
+                if (progressive){
+                    speed_multiplier = 0.62;
+                }
+                else speed_multiplier = 0.75;
                 playing = false;
                 dirY = dirY * -1;
                 ball.x = *disp_width/2;
