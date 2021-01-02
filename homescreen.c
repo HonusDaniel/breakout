@@ -63,11 +63,11 @@ void home_screen(SDL_Renderer** renderer, int* disp_width, int* disp_height, boo
     FILE* score;
     score = fopen("top_scores","a+");
 
-        fscanf(score, "%s ", &stri0);
+        fscanf(score, "%15s ", stri0);
         strcpy(scores_array[0], stri0);
-        fscanf(score, "%s ", &stri1);
+        fscanf(score, "%15s ", stri1);
         strcpy(scores_array[1], stri1);
-        fscanf(score, "%s", &stri2);
+        fscanf(score, "%15s ", stri2);
         strcpy(scores_array[2], stri2);
 
     fclose(score);
