@@ -32,13 +32,13 @@ void save_score(int* score_int)
 //open file in read mode to get values and not delete it accidentally
     FILE* score;
     score = fopen("top_scores","a+");
-        fscanf(score, "%s ", &stri0);
+        fscanf(score, "%15s ", stri0);
         strcpy(scores_array[0], stri0);
         sscanf(stri0, "%d", &int0);
-        fscanf(score, "%s ", &stri1);
+        fscanf(score, "%15s ", stri1);
         strcpy(scores_array[1], stri1);
         sscanf(stri1, "%d", &int1);
-        fscanf(score, "%s", &stri2);
+        fscanf(score, "%15s ", stri2);
         strcpy(scores_array[2], stri2);
         sscanf(stri2, "%d", &int2);
     fclose(score);
@@ -212,7 +212,7 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
     int mousex = 0;
     float speed_multiplier = 0.62;
     float minX,minY,maxY,maxX,workX,workY,rounded;
-    bool quit,failed,playing = false;
+    bool quit,playing = false;
     bool already = true;
     int score_int = 0;
     char score_char[10];
@@ -472,8 +472,8 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
             if (dirY < 0)
                 dirY = dirY * -1;
 
-        if ((ball.y >= (*disp_height - ball.h - 49)) && !failed)
-            if (ball.x >= (paddle.x-ball.w) && ball.x <= (paddle.x + paddle.w) && !failed)
+        if ((ball.y >= (*disp_height - ball.h - 49))){
+            if (ball.x >= (paddle.x-ball.w) && ball.x <= (paddle.x + paddle.w))
             {
             //paddle collion new direction on x and y
                 if ((ball.x + (float)ball.w/2) > paddle.x+((float)paddle.w/2))
@@ -494,7 +494,7 @@ void breakout(SDL_Renderer** renderer, int* disp_width, int* disp_height,SDL_Win
                 ball.y = paddle.y - paddle.h;
             }
             else dirY = dirY*-1;
-
+}
     //if lives run out
         if (lives == 0)
         {
